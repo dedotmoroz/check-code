@@ -50,8 +50,10 @@ export type IFolderObj = Record<
 //     folders: IFolderObj;
 // }
 
-export interface IFoldersList {
-    version?: number;
-    ids?: string[]
-    entities?: IFolderObj;
+export interface IFoldersList extends EntityState<{
+  id: string;
+  name: string;
+  parentId?: string;
+}> {
+  version?: number;
 }
