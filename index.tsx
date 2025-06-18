@@ -167,3 +167,46 @@ export const ServiceNotes = EmptySplitApi.injectEndpoints({
 
     })
 });
+
+
+
+        /**
+         * Удаление заметки
+         */
+        deleteNote: build.mutation<void, IDeleteNote>({
+            query: ({ id, parentId }) => ({
+                url: `/api/service-notes/api/v6/notes/note/${id}`,
+                method: 'DELETE',
+            }),
+            onQueryStarted: async (data, { dispatch, queryFulfilled }) => {
+                await queryFulfilled;
+                /*** Удаление из выбранной папки */
+                dispatch(
+                    ServiceNotes.util.updateQueryData(
+                        'getNoteListPaged',
+                        { folderId: data.parentId ? data.parentId : 'excludeFolders' },
+                        (draftNotes) => {
+                            draftNotes.total -= 1;
+                            draftNotes.entities = getDelFolderNotes({
+                                id: data.id,
+                                notesState: draftNotes.entities,
+                            });
+                        },
+                    ),
+                );
+                /*** Удаление из папки Все заметки */
+                dispatch(
+                    ServiceNotes.util.updateQueryData(
+                        'getNoteListPaged',
+                        { folderId: 'allNotesFolder' },
+                        (draftNotes) => {
+                            draftNotes.total -= 1;
+                            draftNotes.entities = getDelFolderNotes({
+                                id: data.id,
+                                notesState: draftNotes.entities,
+                            });
+                        },
+                    ),
+                );
+            },
+        }),
