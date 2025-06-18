@@ -1,22 +1,20 @@
 # check-code
 
 
-TS2769: No overload matches this call.
-Overload 1 of 2, '(state: DraftableEntityState<{ id: string; name: string; parentId?: string | undefined; }[], EntityId>, entities: readonly { id: string; name: string; parentId?: string | undefined; }[][] | Record<...>): DraftableEntityState<...>', gave the following error.
-Argument of type MaybeDrafted<IFoldersList> is not assignable to parameter of type
-DraftableEntityState<{     id: string;     name: string;     parentId?: string | undefined; }[], EntityId>
-Type IFoldersList is not assignable to type
-DraftableEntityState<{     id: string;     name: string;     parentId?: string | undefined; }[], EntityId>
-Type IFoldersList is not assignable to type
-WritableDraft<EntityState<{     id: string;     name: string;     parentId?: string | undefined; }[], EntityId>>
-Types of property entities are incompatible.
-Type 'Record<string, { id: string; name: string; parentId?: string | undefined; }>' is not assignable to type 'WritableDraft<Record<EntityId, { id: string; name: string; parentId?: string | undefined; }[]>>'.
-string index signatures are incompatible.
+TS2322: Type
+(response: Entities.INotesList) => EntityState<Entities.INoteListItem, string> & {     total: number;     limit: number;     offset: number; }
+is not assignable to type
+(baseQueryReturnValue: unknown, meta: FetchBaseQueryMeta | undefined, arg: INotesListPage) => INoteList | Promise<INoteList>
 Type
-{     id: string;     name: string;     parentId?: string | undefined; }
-is missing the following properties from type
-WritableDraft<{     id: string;     name: string;     parentId?: string | undefined; }>[]
-: length, pop, push, concat, and 29 more.
-Overload 2 of 2, '(state: DraftableEntityState<{ id: string; name: string; parentId?: string | undefined; }[], EntityId>, entities: { payload: readonly { id: string; name: string; parentId?: string | undefined; }[][] | Record<...>; type: string; }): DraftableEntityState<...>', gave the following error.
-Argument of type MaybeDrafted<IFoldersList> is not assignable to parameter of type
-DraftableEntityState<{     id: string;     name: string;     parentId?: string | undefined; }[], EntityId>
+EntityState<INoteListItem, string> & {     total: number;     limit: number;     offset: number; }
+is not assignable to type INoteList | Promise<INoteList>
+Type
+EntityState<INoteListItem, string> & {     total: number;     limit: number;     offset: number; }
+is not assignable to type INoteList
+Types of property entities are incompatible.
+Type
+Record<string, import("/Users/17230829/Documents/DELTA_3/web-isu-top/src/shared/api/notes/entities").INoteListItem>
+is not assignable to type
+Record<string, import("/Users/17230829/Documents/DELTA_3/web-isu-top/src/shared/api/notes/dtos").INoteListItem>
+endpointDefinitions.d.ts(53, 5): The expected type comes from property transformResponse which is declared here on type
+Omit<EndpointDefinitionWithQuery<INotesListPage, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, INoteList> & { ...; } & { ...; } & QueryExtraOptions<...>, "type"> | Omit<...>
