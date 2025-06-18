@@ -247,3 +247,29 @@ export const ServiceNotes = EmptySplitApi.injectEndpoints({
     );
   }
 }),
+
+
+            listenerMiddleware.startListening({
+  actionCreator: ServiceNotes.endpoints.deleteNote.matchFulfilled,
+  effect: async (action, { dispatch }) => {
+    const { id, parentId } = action.meta.arg;
+
+    const targets = [
+      parentId ? parentId : 'excludeFolders',
+      'allNotesFolder'
+    ];
+
+    for (const folderKey of targets) {
+      dispatch(
+        ServiceNotes.util.updateQueryData(
+          'getNoteListPaged',
+          { folderId: folderKey },
+          (draftNotes) => {
+            notesListAdapter.removeOne(draftNotes, id);
+            draftNotes.total = Math.max((draftNotes.total ?? 1) - 1, 0);
+          }
+        )
+      );
+    }
+  }
+});
