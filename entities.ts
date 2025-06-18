@@ -1,8 +1,60 @@
-import {createEntityAdapter, EntityState} from '@reduxjs/toolkit';
+import {createEntityAdapter} from '@reduxjs/toolkit';
 
 import { Op } from 'quill-delta';
-import {IParticipant, IProjectItem} from "../projects";
-import {IFolder} from "./types";
+
+/***********
+ * Folders Entities
+ ***********/
+
+export interface IFolder {
+    id: string;
+    name: string;
+    parentId?: string;
+}
+
+export interface IFoldersList {
+    version?: number;
+    folders: IFolder[];
+}
+
+export interface IManageFoldersList extends IFoldersList{
+    deletedFolderId?: string;
+}
+
+export const foldersListAdapter = createEntityAdapter<IFolder>();
+
+// export interface IFoldersList extends EntityState<IProjectItem, IProjectItem['code']> {}
+
+/*********
+ * Notes Entities
+ *********/
+
+export interface INotesListPage {
+    folderId: string;
+    limit?: number;
+    offset?: number;
+    excludeFolders?: boolean;
+}
+
+export interface INoteListItem {
+    id: string;
+    title: string;
+    text?: string;
+    parentId?: string;
+    version?: number;
+    updatedAt?: string;
+    autoProtocolId?: string;
+    leadingNote: string;
+}
+
+export interface INotesList {
+    offset: number;
+    limit: number;
+    total: number;
+    content: Record<INoteListItem['id'], INoteListItem>;
+}
+
+export const notesListAdapter = createEntityAdapter<INoteListItem>();
 
 interface sharedNote {
     employeeId: string;
@@ -31,21 +83,3 @@ export interface INoteResponse {
     shared?: sharedNote[];
     leadingNote: string;
 }
-
-export interface IFoldersList {
-    version?: number;
-    folders: {
-        id: string;
-        name: string;
-        parentId?: string;
-    }[];
-}
-
-export interface IManageFoldersList {
-    version?: number;
-    deletedFolderId?: string;
-    folders: IFolder[];
-}
-
-export const foldersListAdapter = createEntityAdapter<IFoldersList['folders']>();
-export interface IFoldersList extends EntityState<IProjectItem, IProjectItem['code']> {}
