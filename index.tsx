@@ -107,5 +107,63 @@ export const ServiceNotes = EmptySplitApi.injectEndpoints({
             },
         }),
 
+
+
+        getNoteListPaged: build.query<Dtos.INoteList, Entities.INotesListPage>({
+  query: ({ folderId, offset, limit, excludeFolders }) => ({
+    url: `/api/service-notes/api/v6/notes/list/paged`,
+    method: 'GET',
+    params: { ...(folderId && { folderId }), offset, limit, excludeFolders },
+  }),
+
+  serializeQueryArgs: ({ queryArgs }) => {
+    let sliceName = '';
+    switch (true) {
+      case !queryArgs.folderId && queryArgs.excludeFolders:
+        sliceName = 'excludeFolders';
+        break;
+      case !queryArgs.folderId:
+        sliceName = 'allNotesFolder';
+        break;
+      default:
+        sliceName = queryArgs.folderId;
+        break;
+    }
+    return `getNoteListPaged(${sliceName})`;
+  },
+
+  transformResponse: (response: Entities.INotesList): Dtos.INoteList => {
+    // Нормализуем данные с помощью адаптера
+    return notesListAdapter.setAll(
+      notesListAdapter.getInitialState({
+        total: response.total,
+        limit: response.limit,
+        offset: response.offset
+      }),
+      response.content
+    );
+  },
+
+  merge: (currentCache, newValue) => {
+    // Добавляем новые записи к существующим
+    notesListAdapter.upsertMany(
+      currentCache,
+      Object.values(newValue.entities)
+    );
+
+    // Обновляем мета-данные
+    currentCache.total = newValue.total;
+    currentCache.limit = newValue.limit;
+    currentCache.offset = newValue.offset;
+  },
+
+  forceRefetch({ currentArg, previousArg }) {
+    if (currentArg?.offset !== undefined && previousArg?.offset !== undefined) {
+      return currentArg.offset > previousArg.offset;
+    }
+    return false;
+  },
+}),
+
     })
 });
