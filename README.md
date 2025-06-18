@@ -1,20 +1,4 @@
 # check-code
 
 
-TS2322: Type
-(response: Entities.INotesList) => EntityState<Entities.INoteListItem, string> & {     total: number;     limit: number;     offset: number; }
-is not assignable to type
-(baseQueryReturnValue: unknown, meta: FetchBaseQueryMeta | undefined, arg: INotesListPage) => INoteList | Promise<INoteList>
-Type
-EntityState<INoteListItem, string> & {     total: number;     limit: number;     offset: number; }
-is not assignable to type INoteList | Promise<INoteList>
-Type
-EntityState<INoteListItem, string> & {     total: number;     limit: number;     offset: number; }
-is not assignable to type INoteList
-Types of property entities are incompatible.
-Type
-Record<string, import("/Users/17230829/Documents/DELTA_3/web-isu-top/src/shared/api/notes/entities").INoteListItem>
-is not assignable to type
-Record<string, import("/Users/17230829/Documents/DELTA_3/web-isu-top/src/shared/api/notes/dtos").INoteListItem>
-endpointDefinitions.d.ts(53, 5): The expected type comes from property transformResponse which is declared here on type
-Omit<EndpointDefinitionWithQuery<INotesListPage, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, INoteList> & { ...; } & { ...; } & QueryExtraOptions<...>, "type"> | Omit<...>
+Argument type {forceRefetch({currentArg, previousArg}: {currentArg: any, previousArg: any}): (true | false), query: ({folderId, offset, limit, excludeFolders}: {folderId: any, offset: any, limit: any, excludeFolders: any}) => {method: string, params: {excludeFolders: boolean | undefined, offset: number | undefined, limit: number | undefined}, url: string}, merge: (currentCache: any, newValue: any) => void, transformResponse: (response: Entities.INotesList) => EntityState<INoteListItem, INoteListItem["id"]> & {total: number, offset: number, limit: number}, serializeQueryArgs: ({queryArgs, endpointDefinition, endpointName}: {queryArgs: any, endpointDefinition: any, endpointName: any}) => string} is not assignable to parameter type OmitFromUnion<QueryDefinition<Entities.INotesListPage, BaseQueryFn, string, Dtos.INoteList, string>, "type"> 
