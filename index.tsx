@@ -210,3 +210,40 @@ export const ServiceNotes = EmptySplitApi.injectEndpoints({
                 );
             },
         }),
+
+
+
+            deleteNote: build.mutation<void, IDeleteNote>({
+  query: ({ id }) => ({
+    url: `/api/service-notes/api/v6/notes/note/${id}`,
+    method: 'DELETE',
+  }),
+
+  onQueryStarted: async (data, { dispatch, queryFulfilled }) => {
+    await queryFulfilled;
+
+    /*** Удаление из выбранной папки */
+    dispatch(
+      ServiceNotes.util.updateQueryData(
+        'getNoteListPaged',
+        { folderId: data.parentId ? data.parentId : 'excludeFolders' },
+        (draftNotes) => {
+          notesListAdapter.removeOne(draftNotes, data.id);
+          draftNotes.total = Math.max((draftNotes.total ?? 1) - 1, 0);
+        }
+      )
+    );
+
+    /*** Удаление из папки Все заметки */
+    dispatch(
+      ServiceNotes.util.updateQueryData(
+        'getNoteListPaged',
+        { folderId: 'allNotesFolder' },
+        (draftNotes) => {
+          notesListAdapter.removeOne(draftNotes, data.id);
+          draftNotes.total = Math.max((draftNotes.total ?? 1) - 1, 0);
+        }
+      )
+    );
+  }
+}),
