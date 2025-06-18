@@ -1,51 +1,29 @@
-import {createEntityAdapter, EntityState} from '@reduxjs/toolkit';
-
-import { Op } from 'quill-delta';
-import {IParticipant, IProjectItem} from "../projects";
-import {IFolder} from "./types";
-
-interface sharedNote {
-    employeeId: string;
-    lastShareDate: string;
-}
-
-export interface INoteResponse {
-    id: string;
-    title: string;
-    tags?: string[];
-    text?: string;
-    delta?: Op[];
-    textRTF?: string;
-    createdAt?: string;
-    updatedAt?: string;
-    deleteAt?: string;
-    meeting?: {
-        id?: string;
-        title?: string;
-        date?: string;
-    };
-    parentId?: string;
-    version?: number;
-    autoProtocolId?: string;
-    sharedEmployeeId?: string;
-    shared?: sharedNote[];
-    leadingNote: string;
-}
-
-export interface IFoldersList {
-    version?: number;
-    folders: {
-        id: string;
-        name: string;
-        parentId?: string;
-    }[];
-}
-
-export interface IManageFoldersList {
-    version?: number;
-    deletedFolderId?: string;
-    folders: IFolder[];
-}
-
-export const foldersListAdapter = createEntityAdapter<IFoldersList['folders']>();
-export interface IFoldersList extends EntityState<IProjectItem, IProjectItem['code']> {}
+[
+    {
+        "id": "97fbf175-19a4-433b-89a8-23fd30e7e5b4",
+        "title": "2Новая заметкаdd",
+        "text": "",
+        "parentId": "4fb4f9c5-4ed3-4e8e-8c77-456b5406428b",
+        "version": 5,
+        "updatedAt": "2025-06-10T11:59:11Z",
+        "leadingNote": "cd5ccfdf-9a3c-4181-ad6e-b455efb4155c"
+    },
+    {
+        "id": "cd5ccfdf-9a3c-4181-ad6e-b455efb4155c",
+        "title": "ыыыНq222овая заметка",
+        "text": "",
+        "parentId": "4fb4f9c5-4ed3-4e8e-8c77-456b5406428b",
+        "version": 7,
+        "updatedAt": "2025-06-10T11:48:25Z",
+        "leadingNote": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+        "id": "b3439978-2494-48ac-94ec-a99741254f22",
+        "title": "1ыыыыыыы222Н1овая заметка",
+        "text": "",
+        "parentId": "4fb4f9c5-4ed3-4e8e-8c77-456b5406428b",
+        "version": 19,
+        "updatedAt": "2025-06-10T11:39:54Z",
+        "leadingNote": "5635f172-c900-42ee-ba1f-11fecb9eaa79"
+    }
+]
