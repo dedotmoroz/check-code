@@ -55,21 +55,12 @@ export const ServiceNotes = EmptySplitApi.injectEndpoints({
         }),
 
 
-       getNoteListPaged: build.query<Dtos.INoteList, Entities.INotesListPage>({
+        getNoteListPaged: build.query<Dtos.INoteList, Entities.INotesListPage>({
             query: ({ folderId, offset, limit, excludeFolders }) => ({
                 url: `/api/service-notes/api/v6/notes/list/paged`,
                 method: 'GET',
                 params: { ...(folderId && { folderId }), offset, limit, excludeFolders },
             }),
-            transformResponse: (response: Entities.INotesList) => {
-                return notesListAdapter.upsertMany(
-                    notesListAdapter.getInitialState({
-                        total: response.total,
-                        limit: response.limit,
-                        offset: response.offset,
-                    }), response.content
-                );
-            },
             serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
                 let sliceName = '';
                 switch (true) {
@@ -85,10 +76,14 @@ export const ServiceNotes = EmptySplitApi.injectEndpoints({
                 }
                 return `getNoteListPaged(${sliceName})`;
             },
-            merge: (currentCache, newValue) => {
-                currentCache.content = { ...currentCache.content, ...newValue.content };
-                currentCache.total = newValue.total;
-                currentCache.offset = newValue.offset;
+            transformResponse: (response: Entities.INotesList) => {
+                return notesListAdapter.upsertMany(
+                    notesListAdapter.getInitialState({
+                        total: response.total,
+                        limit: response.limit,
+                        offset: response.offset,
+                    }), mapNoteListDtoToEntity(response.content)
+                );
             },
             forceRefetch({ currentArg, previousArg }) {
                 if (currentArg?.offset !== undefined && previousArg?.offset !== undefined) {
