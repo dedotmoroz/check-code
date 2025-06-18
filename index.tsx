@@ -55,6 +55,50 @@ export const ServiceNotes = EmptySplitApi.injectEndpoints({
         }),
 
 
+       getNoteListPaged: build.query<Dtos.INoteList, Entities.INotesListPage>({
+            query: ({ folderId, offset, limit, excludeFolders }) => ({
+                url: `/api/service-notes/api/v6/notes/list/paged`,
+                method: 'GET',
+                params: { ...(folderId && { folderId }), offset, limit, excludeFolders },
+            }),
+            transformResponse: (response: Entities.INotesList) => {
+                return notesListAdapter.upsertMany(
+                    notesListAdapter.getInitialState({
+                        total: response.total,
+                        limit: response.limit,
+                        offset: response.offset,
+                    }), response.content
+                );
+            },
+            serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
+                let sliceName = '';
+                switch (true) {
+                    case !queryArgs.folderId && queryArgs.excludeFolders:
+                        sliceName = 'excludeFolders';
+                        break;
+                    case !queryArgs.folderId:
+                        sliceName = 'allNotesFolder';
+                        break;
+                    default:
+                        sliceName = queryArgs.folderId;
+                        break;
+                }
+                return `getNoteListPaged(${sliceName})`;
+            },
+            merge: (currentCache, newValue) => {
+                currentCache.content = { ...currentCache.content, ...newValue.content };
+                currentCache.total = newValue.total;
+                currentCache.offset = newValue.offset;
+            },
+            forceRefetch({ currentArg, previousArg }) {
+                if (currentArg?.offset !== undefined && previousArg?.offset !== undefined) {
+                    if (currentArg.offset > previousArg.offset) return true;
+                }
+                return false;
+            },
+        }),
+
+
         /**
          * Получение полной заметка
          */
